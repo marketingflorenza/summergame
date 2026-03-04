@@ -34,7 +34,6 @@
     background: linear-gradient(to bottom, var(--sea-mid) 0%, var(--sea-shallow) 40%, var(--sand-light) 70%);
   }
   
-  /* Shore Waves */
   .shore-wave {
     position: absolute;
     top: 45%; left: -50%; width: 200%; height: 100px;
@@ -50,21 +49,18 @@
     to { transform: translateX(10%) scaleY(1.2); }
   }
 
-  /* Sunlight Glimmer */
   .glimmer {
     position: absolute; top: 0; left: 0; width: 100%; height: 50%;
     background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4), transparent 70%);
     opacity: 0.6;
   }
 
-  /* Decorations */
   .deco { position: absolute; font-size: 50px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1)); z-index: 1; }
   .palm-1 { top: -20px; left: -20px; transform: rotate(15deg); font-size: 120px; opacity: 0.8; }
   .palm-2 { top: -40px; right: -30px; transform: rotate(-25deg); font-size: 100px; opacity: 0.7; }
   .starfish { bottom: 5%; right: 10%; transform: rotate(20deg); opacity: 0.6; font-size: 40px; }
   .shell-deco { bottom: 8%; left: 15%; transform: rotate(-15deg); opacity: 0.5; font-size: 30px; }
 
-  /* ── PAGE CONTENT ── */
   .page {
     position: relative; z-index: 10;
     min-height: 100vh;
@@ -95,13 +91,13 @@
     backdrop-filter: blur(5px);
   }
 
-  /* ── THE PEARL SHELL ── */
   .shell-box {
     position: relative; width: 200px; height: 180px; margin: 30px auto;
     cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    -webkit-tap-highlight-color: transparent;
   }
   .shell-box:hover { transform: scale(1.1) rotate(2deg); }
-  .shell-box:active { transform: scale(0.95); }
+  .shell-box.disabled { opacity: 0.5; pointer-events: none; transform: scale(0.9); }
 
   .pearl {
     position: absolute; top: 48%; left: 50%;
@@ -123,6 +119,7 @@
   .hint-text {
     margin-top: 10px; font-size: 15px; color: var(--white);
     text-shadow: 0 1px 3px rgba(0,0,0,0.3); font-weight: 600;
+    text-align: center;
   }
 
   /* ── SCRATCH SECTION ── */
@@ -139,6 +136,7 @@
     border: 10px solid var(--white);
     box-shadow: 0 20px 50px rgba(0,0,0,0.15);
     background: var(--white);
+    touch-action: none;
   }
 
   .prize-reveal {
@@ -148,10 +146,14 @@
   }
   .prize-icon { font-size: 60px; margin-bottom: 5px; animation: bounce 2s infinite; }
   @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-  .prize-name { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 700; color: var(--sea-deep); line-height: 1.2; }
+  .prize-name { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 700; color: var(--sea-deep); line-height: 1.2; padding: 0 15px; }
   .prize-tag { font-size: 12px; letter-spacing: 5px; text-transform: uppercase; color: var(--sand-dark); margin-top: 8px; font-weight: 700; }
 
-  canvas { position: absolute; inset: 0; cursor: url('https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f3d6.png'), auto; touch-action: none; z-index: 5; }
+  canvas { 
+    position: absolute; inset: 0; 
+    z-index: 5; 
+    cursor: crosshair;
+  }
 
   /* ── CONTROLS ── */
   .prog-bar { width: 100%; height: 10px; background: rgba(0,0,0,0.05); border-radius: 10px; margin: 25px 0; overflow: hidden; }
@@ -161,6 +163,7 @@
   .btn {
     padding: 14px 35px; border-radius: 50px; border: none; font-weight: 700; cursor: pointer;
     transition: all 0.3s; font-family: inherit; font-size: 15px;
+    -webkit-tap-highlight-color: transparent;
   }
   .btn-primary { background: var(--coral); color: white; box-shadow: 0 6px 20px rgba(255,112,67,0.3); }
   .btn-secondary { background: var(--white); color: var(--coral); border: 2px solid var(--sand-light); }
@@ -169,14 +172,16 @@
   /* ── WIN MODAL ── */
   #winModal {
     display: none; position: fixed; inset: 0; z-index: 100;
-    background: rgba(0, 77, 64, 0.3); backdrop-filter: blur(10px);
+    background: rgba(0, 77, 64, 0.4); backdrop-filter: blur(10px);
     align-items: center; justify-content: center; padding: 20px;
   }
   .win-card {
     background: white; width: 100%; max-width: 420px; padding: 50px 30px; border-radius: 40px;
-    text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3);
     position: relative; border-bottom: 8px solid var(--sand-dark);
+    animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
+  @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .win-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 42px; color: var(--coral); margin-bottom: 10px; }
   .win-display { 
     margin: 25px 0; padding: 25px; background: var(--sand-light); 
@@ -235,7 +240,7 @@
     </div>
 
     <div class="btns">
-      <button class="btn btn-secondary" onclick="restart()">🔄 เริ่มใหม่</button>
+      <button class="btn btn-secondary" onclick="restartGame()">🔄 เริ่มใหม่</button>
       <button class="btn btn-primary" onclick="forceReveal()">✨ เปิดทั้งหมด</button>
     </div>
   </div>
@@ -271,22 +276,49 @@ function openLuckyShell() {
   selectedPrize = prizes[Math.floor(Math.random() * prizes.length)];
   document.getElementById('nameBox').innerText = selectedPrize.name;
   document.getElementById('iconBox').innerText = selectedPrize.icon;
-  document.getElementById('scratchSection').style.display = 'block';
-  document.getElementById('mainHint').innerText = "☀️ ใช้ปลายนิ้วขูดทรายสีทองเพื่อดูรางวัล";
-  document.getElementById('shellBtn').style.pointerEvents = 'none';
-  document.getElementById('shellBtn').style.opacity = '0.5';
   
-  setTimeout(setupCanvas, 150);
+  const section = document.getElementById('scratchSection');
+  section.style.display = 'block';
+  
+  document.getElementById('mainHint').innerText = "☀️ ใช้ปลายนิ้วขูดทรายสีทองเพื่อดูรางวัล";
+  const shellBtn = document.getElementById('shellBtn');
+  shellBtn.classList.add('disabled');
+  
+  // เรียก setupCanvas ทันทีหลังจากแก้ display
+  setTimeout(setupCanvas, 50);
 }
 
 function setupCanvas() {
   canvas = document.getElementById('scratchCanvas');
   const wrap = document.getElementById('canvasWrap');
-  canvas.width = wrap.offsetWidth;
-  canvas.height = wrap.offsetHeight;
-  ctx = canvas.getContext('2d');
   
-  // Create Golden Sand Texture
+  // กำหนดขนาดให้แน่นอน
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+  ctx = canvas.getContext('2d', { willReadFrequently: true });
+  
+  drawSandLayer();
+  
+  // ตั้งค่าการลบ
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.lineWidth = 45;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  
+  // ผูกเหตุการณ์
+  canvas.onmousedown = start;
+  canvas.onmousemove = move;
+  window.onmouseup = stop;
+  
+  canvas.ontouchstart = start;
+  canvas.ontouchmove = move;
+  canvas.ontouchend = stop;
+}
+
+function drawSandLayer() {
+  ctx.globalCompositeOperation = 'source-over';
+  
+  // พื้นทราย
   const g = ctx.createLinearGradient(0,0, canvas.width, canvas.height);
   g.addColorStop(0, '#E6BE8A');
   g.addColorStop(0.5, '#F7E7CE');
@@ -294,65 +326,79 @@ function setupCanvas() {
   ctx.fillStyle = g;
   ctx.fillRect(0,0, canvas.width, canvas.height);
   
-  // Add Sand Grains
-  for(let i=0; i<300; i++){
-    ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.4})`;
+  // เม็ดทรายวิ้งๆ
+  for(let i=0; i<400; i++){
+    ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.5})`;
     ctx.beginPath();
     ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*1.5, 0, Math.PI*2);
     ctx.fill();
   }
 
-  // Texture Noise
-  for(let i=0; i<500; i++){
-    ctx.fillStyle = `rgba(139,115,85,${Math.random()*0.1})`;
-    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 1, 1);
-  }
-
-  // Instructions on sand
-  ctx.globalCompositeOperation = 'source-over';
-  ctx.fillStyle = 'rgba(100,70,30,0.5)';
-  ctx.font = "bold 22px 'Noto Sans Thai'";
+  // ข้อความคำแนะนำ
+  ctx.fillStyle = 'rgba(100,70,30,0.6)';
+  ctx.font = "bold 24px 'Noto Sans Thai'";
   ctx.textAlign = "center";
-  ctx.fillText("ขูดทรายตรงนี้", canvas.width/2, canvas.height/2 + 10);
-  
-  ctx.globalCompositeOperation = 'destination-out';
-  
-  canvas.addEventListener('mousedown', start);
-  canvas.addEventListener('mousemove', move);
-  canvas.addEventListener('mouseup', stop);
-  canvas.addEventListener('touchstart', start);
-  canvas.addEventListener('touchmove', move);
-  canvas.addEventListener('touchend', stop);
+  ctx.textBaseline = "middle";
+  ctx.fillText("ขูดทรายตรงนี้", canvas.width/2, canvas.height/2);
 }
 
-function start(e) { drawing = true; scratch(e); }
-function stop() { drawing = false; check(); }
-function move(e) { if(drawing) scratch(e); }
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return {
+    x: t.clientX - rect.left,
+    y: t.clientY - rect.top
+  };
+}
+
+function start(e) { 
+  if (done) return;
+  drawing = true; 
+  const pos = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(pos.x, pos.y);
+  scratch(e); 
+}
+
+function stop() { 
+  if (drawing) {
+    drawing = false; 
+    checkProgress();
+  }
+}
+
+function move(e) { 
+  if (drawing && !done) {
+    e.preventDefault();
+    scratch(e);
+  }
+}
 
 function scratch(e) {
-  e.preventDefault();
-  const r = canvas.getBoundingClientRect();
-  const t = e.touches ? e.touches[0] : e;
-  const x = t.clientX - r.left;
-  const y = t.clientY - r.top;
-  
+  const pos = getPos(e);
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
   ctx.beginPath();
-  ctx.arc(x, y, 30, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.moveTo(pos.x, pos.y);
 }
 
-function check() {
-  const data = ctx.getImageData(0,0, canvas.width, canvas.height).data;
-  let count = 0;
-  for(let i=3; i<data.length; i+=4) if(data[i] === 0) count++;
+function checkProgress() {
+  if (done) return;
   
-  const p = (count / (data.length/4)) * 100;
+  const data = ctx.getImageData(0,0, canvas.width, canvas.height).data;
+  let cleared = 0;
+  for(let i=3; i<data.length; i+=4) {
+    if(data[i] === 0) cleared++;
+  }
+  
+  const p = Math.round((cleared / (data.length/4)) * 100);
   document.getElementById('fillBar').style.width = p + '%';
   
-  if(p > 55 && !done) forceReveal();
+  if(p > 50) forceReveal();
 }
 
 function forceReveal() {
+  if (done) return;
   done = true;
   ctx.clearRect(0,0, canvas.width, canvas.height);
   document.getElementById('fillBar').style.width = '100%';
@@ -361,14 +407,14 @@ function forceReveal() {
     document.getElementById('finalResult').innerText = selectedPrize.icon + " " + selectedPrize.name.replace('\n', ' ');
     document.getElementById('winModal').style.display = 'flex';
     celebrate();
-  }, 600);
+  }, 500);
 }
 
 function celebrate() {
-  const conf = ['#FF7043', '#FFB300', '#4DD0E1', '#FFFFFF'];
-  for(let i=0; i<60; i++) {
+  const colors = ['#FF7043', '#FFB300', '#4DD0E1', '#FFFFFF'];
+  for(let i=0; i<50; i++) {
     const d = document.createElement('div');
-    d.style.cssText = `position:fixed;width:10px;height:10px;background:${conf[Math.floor(Math.random()*conf.length)]};top:-10px;left:${Math.random()*100}vw;z-index:200;border-radius:50%;`;
+    d.style.cssText = `position:fixed;width:10px;height:10px;background:${colors[Math.floor(Math.random()*colors.length)]};top:-10px;left:${Math.random()*100}vw;z-index:200;border-radius:50%;pointer-events:none;`;
     document.body.appendChild(d);
     d.animate([
       { transform: 'translateY(0) rotate(0)', opacity: 1 },
@@ -377,8 +423,22 @@ function celebrate() {
   }
 }
 
-function restart() { location.reload(); }
-function closeWin() { document.getElementById('winModal').style.display = 'none'; }
+function restartGame() {
+  // รีเซ็ตสถานะโดยไม่ต้องโหลดหน้าใหม่
+  done = false;
+  drawing = false;
+  selectedPrize = null;
+  document.getElementById('scratchSection').style.display = 'none';
+  document.getElementById('mainHint').innerText = "🏝️ แตะมุกในหอยเพื่อรับโชคหน้าร้อน";
+  document.getElementById('fillBar').style.width = '0%';
+  const shellBtn = document.getElementById('shellBtn');
+  shellBtn.classList.remove('disabled');
+}
+
+function closeWin() { 
+  document.getElementById('winModal').style.display = 'none';
+  restartGame();
+}
 </script>
 
 </body>
