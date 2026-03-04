@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florenza Clinic – Summer Sea Scratch</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Noto+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sea-shallow: #80DEEA;
+    --sea-mid:     #4DD0E1;
+    --sea-deep:    #00ACC1;
+    --sand-light:  #F5E6CA;
+    --sand-dark:   #D2B48C;
+    --coral:       #FF7043;
+    --white:       #FFFFFF;
+    --ink:         #004D40;
+    --gold:        #FFB300;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    width:100%; min-height:100vh;
+    background: var(--sand-light);
+    font-family: 'Noto Sans Thai', sans-serif;
+    overflow-x: hidden;
+    color: var(--ink);
+  }
+
+  /* ── TROPICAL BEACH BACKGROUND ── */
+  .beach-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: linear-gradient(to bottom, var(--sea-mid) 0%, var(--sea-shallow) 40%, var(--sand-light) 70%);
+  }
+  
+  /* Shore Waves */
+  .shore-wave {
+    position: absolute;
+    top: 45%; left: -50%; width: 200%; height: 100px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 43% 57% 70% 30% / 30% 45% 55% 70%;
+    animation: waveFlow 10s ease-in-out infinite alternate;
+    filter: blur(10px);
+  }
+  .shore-wave.w2 { top: 48%; animation-delay: -2s; background: rgba(255, 255, 255, 0.2); }
+  
+  @keyframes waveFlow {
+    from { transform: translateX(0) scaleY(1); }
+    to { transform: translateX(10%) scaleY(1.2); }
+  }
+
+  /* Sunlight Glimmer */
+  .glimmer {
+    position: absolute; top: 0; left: 0; width: 100%; height: 50%;
+    background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4), transparent 70%);
+    opacity: 0.6;
+  }
+
+  /* Decorations */
+  .deco { position: absolute; font-size: 50px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1)); z-index: 1; }
+  .palm-1 { top: -20px; left: -20px; transform: rotate(15deg); font-size: 120px; opacity: 0.8; }
+  .palm-2 { top: -40px; right: -30px; transform: rotate(-25deg); font-size: 100px; opacity: 0.7; }
+  .starfish { bottom: 5%; right: 10%; transform: rotate(20deg); opacity: 0.6; font-size: 40px; }
+  .shell-deco { bottom: 8%; left: 15%; transform: rotate(-15deg); opacity: 0.5; font-size: 30px; }
+
+  /* ── PAGE CONTENT ── */
+  .page {
+    position: relative; z-index: 10;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 60px 20px 80px;
+  }
+
+  header { text-align: center; margin-bottom: 20px; }
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; letter-spacing: 6px; text-transform: uppercase;
+    color: var(--white); font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(45px, 12vw, 85px); font-weight: 700;
+    color: var(--white); margin: 5px 0;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  h1 span {
+    color: var(--gold); font-style: italic;
+    background: linear-gradient(135deg, var(--gold), var(--coral));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .tagline { 
+    font-size: 14px; letter-spacing: 4px; color: var(--white); 
+    background: rgba(0, 172, 193, 0.4); padding: 4px 15px; border-radius: 20px;
+    backdrop-filter: blur(5px);
+  }
+
+  /* ── THE PEARL SHELL ── */
+  .shell-box {
+    position: relative; width: 200px; height: 180px; margin: 30px auto;
+    cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .shell-box:hover { transform: scale(1.1) rotate(2deg); }
+  .shell-box:active { transform: scale(0.95); }
+
+  .pearl {
+    position: absolute; top: 48%; left: 50%;
+    width: 55px; height: 55px;
+    background: radial-gradient(circle at 30% 30%, #ffffff, #fff9e6 60%, #f0e0b0);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 40px rgba(255,255,255,1), inset -4px -4px 10px rgba(0,0,0,0.05);
+    z-index: 2;
+    animation: pearlPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pearlPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.7); transform: translate(-50%, -50%) scale(1); }
+    50% { box-shadow: 0 0 50px rgba(255,255,255,1); transform: translate(-50%, -50%) scale(1.05); }
+  }
+
+  .shell-svg { width: 100%; height: 100%; filter: drop-shadow(0 12px 20px rgba(0,0,0,0.15)); }
+
+  .hint-text {
+    margin-top: 10px; font-size: 15px; color: var(--white);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3); font-weight: 600;
+  }
+
+  /* ── SCRATCH SECTION ── */
+  .scratch-area {
+    display: none; width: min(94vw, 500px);
+    margin-top: 40px; text-align: center;
+    animation: fadeInScale 0.6s ease-out;
+  }
+  @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+  .scratch-frame {
+    position: relative; width: 100%; aspect-ratio: 16/9;
+    border-radius: 30px; overflow: hidden;
+    border: 10px solid var(--white);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    background: var(--white);
+  }
+
+  .prize-reveal {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: radial-gradient(circle at center, #fff 0%, var(--sea-shallow) 150%);
+  }
+  .prize-icon { font-size: 60px; margin-bottom: 5px; animation: bounce 2s infinite; }
+  @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .prize-name { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 700; color: var(--sea-deep); line-height: 1.2; }
+  .prize-tag { font-size: 12px; letter-spacing: 5px; text-transform: uppercase; color: var(--sand-dark); margin-top: 8px; font-weight: 700; }
+
+  canvas { position: absolute; inset: 0; cursor: url('https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f3d6.png'), auto; touch-action: none; z-index: 5; }
+
+  /* ── CONTROLS ── */
+  .prog-bar { width: 100%; height: 10px; background: rgba(0,0,0,0.05); border-radius: 10px; margin: 25px 0; overflow: hidden; }
+  .prog-fill { height: 100%; background: linear-gradient(90deg, var(--sea-mid), var(--coral)); width: 0%; transition: width 0.4s; }
+  
+  .btns { display: flex; gap: 15px; justify-content: center; }
+  .btn {
+    padding: 14px 35px; border-radius: 50px; border: none; font-weight: 700; cursor: pointer;
+    transition: all 0.3s; font-family: inherit; font-size: 15px;
+  }
+  .btn-primary { background: var(--coral); color: white; box-shadow: 0 6px 20px rgba(255,112,67,0.3); }
+  .btn-secondary { background: var(--white); color: var(--coral); border: 2px solid var(--sand-light); }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+  /* ── WIN MODAL ── */
+  #winModal {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: rgba(0, 77, 64, 0.3); backdrop-filter: blur(10px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .win-card {
+    background: white; width: 100%; max-width: 420px; padding: 50px 30px; border-radius: 40px;
+    text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    position: relative; border-bottom: 8px solid var(--sand-dark);
+  }
+  .win-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 42px; color: var(--coral); margin-bottom: 10px; }
+  .win-display { 
+    margin: 25px 0; padding: 25px; background: var(--sand-light); 
+    border-radius: 20px; font-size: 26px; font-weight: 700; color: var(--ink);
+    border: 2px dashed var(--sand-dark);
+  }
+
+  footer { margin-top: auto; padding: 30px; font-size: 12px; color: var(--sand-dark); font-weight: 600; text-align: center; }
+
+</style>
+</head>
+<body>
+
+<div class="beach-bg">
+  <div class="glimmer"></div>
+  <div class="shore-wave"></div>
+  <div class="shore-wave w2"></div>
+  
+  <div class="deco palm-1">🌴</div>
+  <div class="deco palm-2">🌿</div>
+  <div class="deco starfish">⭐</div>
+  <div class="deco shell-deco">🐚</div>
+</div>
+
+<div class="page">
+  <header>
+    <div class="brand-name">Florenza Clinic</div>
+    <h1>Beach <span>Lucky</span></h1>
+    <div class="tagline">✦ SUMMER GIFT 2025 ✦</div>
+  </header>
+
+  <!-- Interactive Shell -->
+  <div class="shell-box" id="shellBtn" onclick="openLuckyShell()">
+    <div class="pearl"></div>
+    <svg class="shell-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 85C72.0914 85 90 70.0914 90 50C90 29.9086 72.0914 15 50 15C27.9086 15 10 29.9086 10 50C10 70.0914 27.9086 85 50 85Z" fill="#FFF5E1"/>
+      <path d="M15 50C15 67.5 30.5 80 50 80C69.5 80 85 67.5 85 50" stroke="#D2B48C" stroke-width="2" stroke-linecap="round"/>
+      <path d="M50 20V80M35 22V78M65 22V78M22 35L78 35M22 65L78 65" stroke="#D2B48C" stroke-opacity="0.2" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <p class="hint-text" id="mainHint">🏝️ แตะมุกในหอยเพื่อรับโชคหน้าร้อน</p>
+
+  <!-- Scratch Box -->
+  <div class="scratch-area" id="scratchSection">
+    <div class="scratch-frame" id="canvasWrap">
+      <div class="prize-reveal">
+        <div class="prize-icon" id="iconBox">🌴</div>
+        <div class="prize-name" id="nameBox">Summer Surprise</div>
+        <div class="prize-tag">Florenza Clinic</div>
+      </div>
+      <canvas id="scratchCanvas"></canvas>
+    </div>
+    
+    <div class="prog-bar">
+      <div class="prog-fill" id="fillBar"></div>
+    </div>
+
+    <div class="btns">
+      <button class="btn btn-secondary" onclick="restart()">🔄 เริ่มใหม่</button>
+      <button class="btn btn-primary" onclick="forceReveal()">✨ เปิดทั้งหมด</button>
+    </div>
+  </div>
+
+  <footer>© 2025 Florenza Clinic · Exclusive Summer Event</footer>
+</div>
+
+<!-- Win Modal -->
+<div id="winModal">
+  <div class="win-card">
+    <h2>Congrats!</h2>
+    <p>คุณได้รับรางวัลจากหาดทราย Florenza</p>
+    <div class="win-display" id="finalResult">...</div>
+    <button class="btn btn-primary" style="width:100%" onclick="closeWin()">รับสิทธิ์ผ่าน LINE</button>
+  </div>
+</div>
+
+<script>
+const prizes = [
+  { name: "PICO LASER\nหน้าใส 1 ครั้ง", icon: "💎" },
+  { name: "AURA DRIP\nผิวกายออร่า", icon: "🍹" },
+  { name: "MESO FAT\nแก้มเหนียง", icon: "💉" },
+  { name: "HIFU ULTRA\nยกกระชับ 100 ช็อต", icon: "🏖️" },
+  { name: "FACIAL SPA\nช้อนทอง 1 ครั้ง", icon: "✨" },
+  { name: "VOUCHER\nแทนเงินสด 1,000.-", icon: "🎫" },
+  { name: "BOTOX\nลดริ้วรอย 1 จุด", icon: "🌟" }
+];
+
+let canvas, ctx, drawing = false, done = false;
+let selectedPrize = null;
+
+function openLuckyShell() {
+  selectedPrize = prizes[Math.floor(Math.random() * prizes.length)];
+  document.getElementById('nameBox').innerText = selectedPrize.name;
+  document.getElementById('iconBox').innerText = selectedPrize.icon;
+  document.getElementById('scratchSection').style.display = 'block';
+  document.getElementById('mainHint').innerText = "☀️ ใช้ปลายนิ้วขูดทรายสีทองเพื่อดูรางวัล";
+  document.getElementById('shellBtn').style.pointerEvents = 'none';
+  document.getElementById('shellBtn').style.opacity = '0.5';
+  
+  setTimeout(setupCanvas, 150);
+}
+
+function setupCanvas() {
+  canvas = document.getElementById('scratchCanvas');
+  const wrap = document.getElementById('canvasWrap');
+  canvas.width = wrap.offsetWidth;
+  canvas.height = wrap.offsetHeight;
+  ctx = canvas.getContext('2d');
+  
+  // Create Golden Sand Texture
+  const g = ctx.createLinearGradient(0,0, canvas.width, canvas.height);
+  g.addColorStop(0, '#E6BE8A');
+  g.addColorStop(0.5, '#F7E7CE');
+  g.addColorStop(1, '#D2B48C');
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0, canvas.width, canvas.height);
+  
+  // Add Sand Grains
+  for(let i=0; i<300; i++){
+    ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.4})`;
+    ctx.beginPath();
+    ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*1.5, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  // Texture Noise
+  for(let i=0; i<500; i++){
+    ctx.fillStyle = `rgba(139,115,85,${Math.random()*0.1})`;
+    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 1, 1);
+  }
+
+  // Instructions on sand
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = 'rgba(100,70,30,0.5)';
+  ctx.font = "bold 22px 'Noto Sans Thai'";
+  ctx.textAlign = "center";
+  ctx.fillText("ขูดทรายตรงนี้", canvas.width/2, canvas.height/2 + 10);
+  
+  ctx.globalCompositeOperation = 'destination-out';
+  
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  canvas.addEventListener('mouseup', stop);
+  canvas.addEventListener('touchstart', start);
+  canvas.addEventListener('touchmove', move);
+  canvas.addEventListener('touchend', stop);
+}
+
+function start(e) { drawing = true; scratch(e); }
+function stop() { drawing = false; check(); }
+function move(e) { if(drawing) scratch(e); }
+
+function scratch(e) {
+  e.preventDefault();
+  const r = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  const x = t.clientX - r.left;
+  const y = t.clientY - r.top;
+  
+  ctx.beginPath();
+  ctx.arc(x, y, 30, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function check() {
+  const data = ctx.getImageData(0,0, canvas.width, canvas.height).data;
+  let count = 0;
+  for(let i=3; i<data.length; i+=4) if(data[i] === 0) count++;
+  
+  const p = (count / (data.length/4)) * 100;
+  document.getElementById('fillBar').style.width = p + '%';
+  
+  if(p > 55 && !done) forceReveal();
+}
+
+function forceReveal() {
+  done = true;
+  ctx.clearRect(0,0, canvas.width, canvas.height);
+  document.getElementById('fillBar').style.width = '100%';
+  
+  setTimeout(() => {
+    document.getElementById('finalResult').innerText = selectedPrize.icon + " " + selectedPrize.name.replace('\n', ' ');
+    document.getElementById('winModal').style.display = 'flex';
+    celebrate();
+  }, 600);
+}
+
+function celebrate() {
+  const conf = ['#FF7043', '#FFB300', '#4DD0E1', '#FFFFFF'];
+  for(let i=0; i<60; i++) {
+    const d = document.createElement('div');
+    d.style.cssText = `position:fixed;width:10px;height:10px;background:${conf[Math.floor(Math.random()*conf.length)]};top:-10px;left:${Math.random()*100}vw;z-index:200;border-radius:50%;`;
+    document.body.appendChild(d);
+    d.animate([
+      { transform: 'translateY(0) rotate(0)', opacity: 1 },
+      { transform: `translateY(110vh) rotate(${Math.random()*360}deg)`, opacity: 0 }
+    ], { duration: 1500 + Math.random()*2000, easing: 'ease-out' }).onfinish = () => d.remove();
+  }
+}
+
+function restart() { location.reload(); }
+function closeWin() { document.getElementById('winModal').style.display = 'none'; }
+</script>
+
+</body>
+</html>
