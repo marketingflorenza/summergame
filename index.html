@@ -192,13 +192,38 @@
   }
 
   .form-group { text-align: left; margin-bottom: 15px; }
-  .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px; color: var(--sea-deep); }
+  .form-group label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--sea-deep); }
   .form-control {
-    width: 100%; padding: 10px 15px; border-radius: 10px; border: 1.5px solid #eee;
-    font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.3s;
+    width: 100%; padding: 12px 16px; border-radius: 12px; border: 1.5px solid #e0e0e0;
+    font-family: inherit; font-size: 16px; outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #fcfcfc;
+    color: var(--ink);
+    -webkit-appearance: none; /* Reset for iOS */
   }
-  .form-control:focus { border-color: var(--sea-mid); }
-  select.form-control { appearance: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") no-repeat right 15px center; }
+  .form-control:focus { border-color: var(--sea-mid); box-shadow: 0 0 0 4px rgba(77, 208, 225, 0.1); }
+  
+  /* Optimize Date Input for Mobile */
+  input[type="date"].form-control {
+    position: relative;
+    min-height: 48px; /* Standard touch target height */
+    display: flex;
+    align-items: center;
+  }
+  /* Style the date placeholder or content */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+  }
+
+  select.form-control { appearance: none; background: #fcfcfc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") no-repeat right 15px center; }
 
   footer { margin-top: auto; padding: 30px; font-size: 12px; color: var(--sand-dark); font-weight: 600; text-align: center; }
 
