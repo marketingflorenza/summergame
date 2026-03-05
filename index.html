@@ -146,7 +146,7 @@
   }
   .prize-icon { font-size: 60px; margin-bottom: 5px; animation: bounce 2s infinite; }
   @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-  .prize-name { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 700; color: var(--sea-deep); line-height: 1.2; padding: 0 15px; }
+  .prize-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: var(--sea-deep); line-height: 1.2; padding: 0 15px; }
   .prize-tag { font-size: 12px; letter-spacing: 5px; text-transform: uppercase; color: var(--sand-dark); margin-top: 8px; font-weight: 700; }
 
   canvas { 
@@ -166,31 +166,60 @@
     -webkit-tap-highlight-color: transparent;
   }
   .btn-primary { background: var(--coral); color: white; box-shadow: 0 6px 20px rgba(255,112,67,0.3); }
-  .btn-secondary { background: var(--white); color: var(--coral); border: 2px solid var(--sand-light); }
   .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+  .btn:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
 
-  /* ── WIN MODAL ── */
+  /* ── WIN MODAL / FORM ── */
   #winModal {
     display: none; position: fixed; inset: 0; z-index: 100;
     background: rgba(0, 77, 64, 0.4); backdrop-filter: blur(10px);
     align-items: center; justify-content: center; padding: 20px;
   }
   .win-card {
-    background: white; width: 100%; max-width: 420px; padding: 50px 30px; border-radius: 40px;
+    background: white; width: 100%; max-width: 450px; padding: 30px; border-radius: 30px;
     text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3);
     position: relative; border-bottom: 8px solid var(--sand-dark);
+    max-height: 90vh; overflow-y: auto;
     animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .win-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 42px; color: var(--coral); margin-bottom: 10px; }
+  .win-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 36px; color: var(--coral); margin-bottom: 10px; }
+  
   .win-display { 
-    margin: 25px 0; padding: 25px; background: var(--sand-light); 
-    border-radius: 20px; font-size: 26px; font-weight: 700; color: var(--ink);
+    margin: 15px 0; padding: 15px; background: var(--sand-light); 
+    border-radius: 15px; font-size: 22px; font-weight: 700; color: var(--ink);
     border: 2px dashed var(--sand-dark);
   }
 
+  .form-group { text-align: left; margin-bottom: 15px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px; color: var(--sea-deep); }
+  .form-control {
+    width: 100%; padding: 10px 15px; border-radius: 10px; border: 1.5px solid #eee;
+    font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.3s;
+  }
+  .form-control:focus { border-color: var(--sea-mid); }
+  select.form-control { appearance: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") no-repeat right 15px center; }
+
   footer { margin-top: auto; padding: 30px; font-size: 12px; color: var(--sand-dark); font-weight: 600; text-align: center; }
 
+  /* Message state - Already Played */
+  #alreadyPlayedMsg { 
+    display: none; 
+    width: min(94vw, 500px);
+    background: white; 
+    border-radius: 30px; 
+    text-align: center; 
+    margin-top: 20px; 
+    padding: 40px 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    border-bottom: 6px solid var(--sand-dark);
+    animation: fadeInScale 0.6s ease-out;
+  }
+  .success-badge {
+    width: 60px; height: 60px; background: #4caf50; color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 30px; margin: 0 auto 20px;
+  }
 </style>
 </head>
 <body>
@@ -224,6 +253,15 @@
   </div>
   <p class="hint-text" id="mainHint">🏝️ แตะมุกในหอยเพื่อรับโชคหน้าร้อน</p>
 
+  <!-- Already Played State -->
+  <div id="alreadyPlayedMsg">
+    <div class="success-badge">✓</div>
+    <p style="font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 10px;">คุณได้รับสิทธิเรียบร้อยแล้ว</p>
+    <div class="win-display" id="playedPrizeDisplay" style="margin: 20px 0;">...</div>
+    <p style="font-size: 14px; color: var(--coral); font-weight: 600;">คุณได้รับสิทธิพร้อมรายการด้านบนแล้ว<br>และไม่สามารถใช้สิทธิได้อีก</p>
+    <p style="font-size: 12px; opacity: 0.6; margin-top: 20px;">ขอบคุณที่ร่วมสนุกกับ Florenza Clinic</p>
+  </div>
+
   <!-- Scratch Box -->
   <div class="scratch-area" id="scratchSection">
     <div class="scratch-frame" id="canvasWrap">
@@ -240,7 +278,6 @@
     </div>
 
     <div class="btns">
-      <button class="btn btn-secondary" onclick="restartGame()">🔄 เริ่มใหม่</button>
       <button class="btn btn-primary" onclick="forceReveal()">✨ เปิดทั้งหมด</button>
     </div>
   </div>
@@ -251,28 +288,83 @@
 <!-- Win Modal -->
 <div id="winModal">
   <div class="win-card">
-    <h2>Congrats!</h2>
+    <h2>Congratulations!</h2>
     <p>คุณได้รับรางวัลจากหาดทราย Florenza</p>
     <div class="win-display" id="finalResult">...</div>
-    <button class="btn btn-primary" style="width:100%" onclick="closeWin()">รับสิทธิ์ผ่าน LINE</button>
+    
+    <div style="text-align: left; border-top: 1px solid #eee; padding-top: 20px;">
+      <p style="text-align: center; margin-bottom: 15px; font-weight: 700;">กรอกข้อมูลเพื่อรับสิทธิ</p>
+      <form id="claimForm">
+        <div class="form-group">
+          <label>ชื่อ-นามสกุล</label>
+          <input type="text" name="fullname" class="form-control" placeholder="ระบุชื่อจริง-นามสกุล" required>
+        </div>
+        <div class="form-group">
+          <label>เบอร์โทรศัพท์</label>
+          <input type="tel" name="phone" class="form-control" placeholder="ระบุเบอร์โทรที่ติดต่อได้" required>
+        </div>
+        <div class="form-group">
+          <label>สาขาที่ใช้บริการ</label>
+          <select name="branch" class="form-control" required>
+            <option value="">เลือกสาขาใกล้บ้านคุณ</option>
+            <option value="เชียงใหม่">สาขาเชียงใหม่</option>
+            <option value="บางใหญ่">สาขาบางใหญ่</option>
+            <option value="ศรีราชา">สาขาศรีราชา</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>วันที่เข้ารับบริการ (โดยประมาณ)</label>
+          <input type="date" name="service_date" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%" id="submitBtn">รับสิทธิ</button>
+      </form>
+    </div>
   </div>
 </div>
 
 <script>
+// --- Configuration ---
+// แก้ไข URL เป็น Google Apps Script ของคุณ
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzhNnrH6S7WcvwEhjssP6E_2ylSRW8Lfbn27c4sB3pynr-vPPg5UHBrBx8P9mBbXhq2/exec"; 
+
 const prizes = [
-  { name: "PICO LASER\nหน้าใส 1 ครั้ง", icon: "💎" },
-  { name: "AURA DRIP\nผิวกายออร่า", icon: "🍹" },
-  { name: "MESO FAT\nแก้มเหนียง", icon: "💉" },
-  { name: "HIFU ULTRA\nยกกระชับ 100 ช็อต", icon: "🏖️" },
-  { name: "FACIAL SPA\nช้อนทอง 1 ครั้ง", icon: "✨" },
-  { name: "VOUCHER\nแทนเงินสด 1,000.-", icon: "🎫" },
-  { name: "BOTOX\nลดริ้วรอย 1 จุด", icon: "🌟" }
+  { name: "Body s 1 ครั้ง", icon: "🧜‍♀️" },
+  { name: "Meso ฝ้า 1 ครั้ง", icon: "🐚" },
+  { name: "Meso aura skin 1 ครั้ง", icon: "✨" },
+  { name: "Meso ลดสิว 1 ครั้ง", icon: "🌸" },
+  { name: "FACIAL SPA ช้อนทอง 1 ครั้ง", icon: "🥄" },
+  { name: "VOUCHER แทนเงินสด 1,000.-", icon: "🎫" },
+  { name: "VOUCHER แทนเงินสด 2,000.-", icon: "🎫" },
+  { name: "Meso Chanel 1 ครั้ง", icon: "🌺" },
+  { name: "เลเซอรรักแร้ 1 ครั้ง", icon: "🧼" },
+  { name: "เลเซอร์หนวด 1 ครั้ง", icon: "🧔" },
+  { name: "เลเซอร์บิกินี่ 1 ครั้ง", icon: "👙" }
 ];
 
 let canvas, ctx, drawing = false, done = false;
 let selectedPrize = null;
 
+// Check if user has already played on load
+window.onload = () => {
+  const played = localStorage.getItem('florenza_summer_played');
+  const prizeName = localStorage.getItem('florenza_summer_prize_name');
+  
+  if (played) {
+    document.getElementById('shellBtn').classList.add('disabled');
+    document.getElementById('mainHint').style.display = 'none';
+    document.getElementById('scratchSection').style.display = 'none';
+    
+    const msgBox = document.getElementById('alreadyPlayedMsg');
+    msgBox.style.display = 'block';
+    if (prizeName) {
+      document.getElementById('playedPrizeDisplay').innerText = prizeName;
+    }
+  }
+};
+
 function openLuckyShell() {
+  if (localStorage.getItem('florenza_summer_played')) return;
+
   selectedPrize = prizes[Math.floor(Math.random() * prizes.length)];
   document.getElementById('nameBox').innerText = selectedPrize.name;
   document.getElementById('iconBox').innerText = selectedPrize.icon;
@@ -284,7 +376,6 @@ function openLuckyShell() {
   const shellBtn = document.getElementById('shellBtn');
   shellBtn.classList.add('disabled');
   
-  // เรียก setupCanvas ทันทีหลังจากแก้ display
   setTimeout(setupCanvas, 50);
 }
 
@@ -292,20 +383,17 @@ function setupCanvas() {
   canvas = document.getElementById('scratchCanvas');
   const wrap = document.getElementById('canvasWrap');
   
-  // กำหนดขนาดให้แน่นอน
   canvas.width = wrap.clientWidth;
   canvas.height = wrap.clientHeight;
   ctx = canvas.getContext('2d', { willReadFrequently: true });
   
   drawSandLayer();
   
-  // ตั้งค่าการลบ
   ctx.globalCompositeOperation = 'destination-out';
   ctx.lineWidth = 45;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   
-  // ผูกเหตุการณ์
   canvas.onmousedown = start;
   canvas.onmousemove = move;
   window.onmouseup = stop;
@@ -317,8 +405,6 @@ function setupCanvas() {
 
 function drawSandLayer() {
   ctx.globalCompositeOperation = 'source-over';
-  
-  // พื้นทราย
   const g = ctx.createLinearGradient(0,0, canvas.width, canvas.height);
   g.addColorStop(0, '#E6BE8A');
   g.addColorStop(0.5, '#F7E7CE');
@@ -326,7 +412,6 @@ function drawSandLayer() {
   ctx.fillStyle = g;
   ctx.fillRect(0,0, canvas.width, canvas.height);
   
-  // เม็ดทรายวิ้งๆ
   for(let i=0; i<400; i++){
     ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.5})`;
     ctx.beginPath();
@@ -334,7 +419,6 @@ function drawSandLayer() {
     ctx.fill();
   }
 
-  // ข้อความคำแนะนำ
   ctx.fillStyle = 'rgba(100,70,30,0.6)';
   ctx.font = "bold 24px 'Noto Sans Thai'";
   ctx.textAlign = "center";
@@ -345,10 +429,7 @@ function drawSandLayer() {
 function getPos(e) {
   const rect = canvas.getBoundingClientRect();
   const t = e.touches ? e.touches[0] : e;
-  return {
-    x: t.clientX - rect.left,
-    y: t.clientY - rect.top
-  };
+  return { x: t.clientX - rect.left, y: t.clientY - rect.top };
 }
 
 function start(e) { 
@@ -384,16 +465,11 @@ function scratch(e) {
 
 function checkProgress() {
   if (done) return;
-  
   const data = ctx.getImageData(0,0, canvas.width, canvas.height).data;
   let cleared = 0;
-  for(let i=3; i<data.length; i+=4) {
-    if(data[i] === 0) cleared++;
-  }
-  
+  for(let i=3; i<data.length; i+=4) if(data[i] === 0) cleared++;
   const p = Math.round((cleared / (data.length/4)) * 100);
   document.getElementById('fillBar').style.width = p + '%';
-  
   if(p > 50) forceReveal();
 }
 
@@ -416,28 +492,55 @@ function celebrate() {
     const d = document.createElement('div');
     d.style.cssText = `position:fixed;width:10px;height:10px;background:${colors[Math.floor(Math.random()*colors.length)]};top:-10px;left:${Math.random()*100}vw;z-index:200;border-radius:50%;pointer-events:none;`;
     document.body.appendChild(d);
-    d.animate([
-      { transform: 'translateY(0) rotate(0)', opacity: 1 },
-      { transform: `translateY(110vh) rotate(${Math.random()*360}deg)`, opacity: 0 }
-    ], { duration: 1500 + Math.random()*2000, easing: 'ease-out' }).onfinish = () => d.remove();
+    d.animate([{ transform: 'translateY(0) rotate(0)', opacity: 1 }, { transform: `translateY(110vh) rotate(${Math.random()*360}deg)`, opacity: 0 }], { duration: 1500 + Math.random()*2000, easing: 'ease-out' }).onfinish = () => d.remove();
   }
 }
 
-function restartGame() {
-  // รีเซ็ตสถานะโดยไม่ต้องโหลดหน้าใหม่
-  done = false;
-  drawing = false;
-  selectedPrize = null;
-  document.getElementById('scratchSection').style.display = 'none';
-  document.getElementById('mainHint').innerText = "🏝️ แตะมุกในหอยเพื่อรับโชคหน้าร้อน";
-  document.getElementById('fillBar').style.width = '0%';
-  const shellBtn = document.getElementById('shellBtn');
-  shellBtn.classList.remove('disabled');
-}
+// --- Form Handling ---
+document.getElementById('claimForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerText = "กำลังบันทึก...";
+
+  const formData = new FormData(e.target);
+  const prizeText = selectedPrize.icon + " " + selectedPrize.name.replace('\n', ' ');
+  const data = {
+    fullname: formData.get('fullname'),
+    phone: formData.get('phone'),
+    branch: formData.get('branch'),
+    service_date: formData.get('service_date'),
+    prize: prizeText,
+    timestamp: new Date().toLocaleString('th-TH')
+  };
+
+  try {
+    // บันทึกว่าเล่นแล้วและเก็บชื่อรางวัลไว้แสดงผล
+    localStorage.setItem('florenza_summer_played', 'true');
+    localStorage.setItem('florenza_summer_prize_name', prizeText);
+
+    if (GOOGLE_SHEET_URL) {
+      await fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    }
+
+    document.getElementById('winModal').style.display = 'none';
+    location.reload(); 
+
+  } catch (error) {
+    console.error(error);
+    localStorage.setItem('florenza_summer_played', 'true');
+    localStorage.setItem('florenza_summer_prize_name', prizeText);
+    location.reload();
+  }
+};
 
 function closeWin() { 
   document.getElementById('winModal').style.display = 'none';
-  restartGame();
 }
 </script>
 
